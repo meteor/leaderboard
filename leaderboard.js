@@ -41,16 +41,16 @@ if (Meteor.isClient) {
 
 // On server startup, create some players if the database is empty.
 if (Meteor.isServer) {
-  Meteor.startup(function () {
-    if (Players.find().count() === 0) {
+  Meteor.startup(async () => {
+    if (await Players.countDocuments({}) === 0) {
       const names = ["Ada Lovelace", "Grace Hopper", "Marie Curie",
                    "Carl Friedrich Gauss", "Nikola Tesla", "Claude Shannon"];
-      names.forEach(function (name) {
-        Players.insert({
+      for (const name of names) {
+        await Players.insertAsync({
           name: name,
           score: Math.floor(Random.fraction() * 10) * 5
         });
-      });
+      }
     }
   });
 }
